@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+	<title>Elasticsearch Bootfaces Example GUI</title>
+</h:head>
+
+<h:body>
+	<h1>Customer Details</h1>
+
+	<h:form id="master">
+
+		<div class="ui-g">
+			<div class="ui-g-2">
+				<p:fieldset legend="Customer Data" style="margin-bottom:20px">
+					<p:outputPanel id="customerDetails" style="text-align:center;">
+						<p:panelGrid columns="2" columnClasses="label,value">
+
+							<h:outputText value="ID:" />
+							<h:outputText value="#{customerdetails.customerData.id}" />
+
+							<h:outputText value="Firstname" />
+							<h:outputText
+								value="#{customerdetails.customerData.kunde_vorname}" />
+
+							<h:outputText value="Name:" />
+							<h:outputText value="#{customerdetails.customerData.kunde_name}" />
+
+							<h:outputText value="Birthday" />
+							<h:outputText
+								value="#{customerdetails.customerData.kunde_geburtsdatum}">
+								<f:convertDateTime pattern="dd.MM.yyyy" />
+							</h:outputText>
+
+							<h:outputText value="Locked" />
+							<h:outputText
+								value="#{customerdetails.customerData.kunde_sperrung}" />
+
+						</p:panelGrid>
+					</p:outputPanel>
+				</p:fieldset>
+			</div>
+			<div class="ui-g-4">
+				<p:fieldset legend="Address" style="margin-bottom:20px">
+					<p:dataTable id="addressData" var="addresse"
+						value="#{customerdetails.customerData.kunde_anschrift}"
+						scrollable="true" scrollHeight="400"
+						emptyMessage="No Data available">
+
+
+						<p:column headerText="Street">
+							<h:outputText value="#{addresse.anschrift_Strasse}" />
+						</p:column>
+
+						<p:column headerText="No.">
+							<h:outputText value="#{addresse.anschrift_hausnummer}" />
+						</p:column>
+
+						<p:column headerText="Post Code">
+							<h:outputText value="#{addresse.anschrift_postleitzahl}" />
+						</p:column>
+
+						<p:column headerText="Region">
+							<h:outputText value="#{addresse.anschrift_ort}">
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Country">
+							<h:outputText value="#{addresse.land_kuerzel}">
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+			</div>
+			<div class="ui-g-2"></div>
+			<div class="ui-g-3">
+				<p:fieldset legend="Open Orders" style="margin-bottom:20px">
+					<p:dataTable id="openOrders" var="order"
+						value="#{customerdetails.openOrders}" scrollable="true"
+						scrollHeight="400" emptyMessage="No open Orders available">
+
+
+						<p:column headerText="ID">
+							<h:outputText value="#{order.bestellung_id}" />
+						</p:column>
+
+						<p:column headerText="Datum">
+							<h:outputText value="#{order.bestellung_datum}">
+								<f:convertDateTime pattern="dd.MM.yyyy" />
+							</h:outputText>
+						</p:column>
+
+					</p:dataTable>
+				</p:fieldset>
+			</div>
+		</div>
+
+		<p:spacer width="0" height="20" />
+
+		<h2>Bestellungen</h2>
+
+		<div class="ui-g">
+			<div class="ui-g-5">
+				<p:dataTable id="orders" var="orders"
+					value="#{customerdetails.customerData.kunde_bestellung}"
+					scrollable="true" scrollHeight="400"
+					emptyMessage="No Orders Available" selectionMode="single"
+					rowKey="#{orders.bestellung_id}">
+
+					<p:ajax event="rowSelect" listener="#{customerdetails.selectOrder}"
+						update="master" />
+
+
+					<p:column headerText="ID">
+						<h:outputText value="#{orders.bestellung_id}" />
+					</p:column>
+
+					<p:column headerText="Sum">
+						<h:outputText
+							value="#{customerdetails.clalculateSum(orders.bestellung_posten)} €" />
+					</p:column>
+
+					<p:column headerText="Status">
+						<h:outputText value="#{orders.bestellung_status}" />
+					</p:column>
+
+					<p:column headerText="Date">
+						<h:outputText value="#{orders.bestellung_datum}">
+							<f:convertDateTime pattern="dd.MM.yyyy" />
+						</h:outputText>
+					</p:column>
+
+				</p:dataTable>
+			</div>
+			<div class="ui-g-7">
+				<p:dataTable id="orderItems" var="items"
+					value="#{customerdetails.orderItems}" scrollable="true"
+					scrollHeight="400" emptyMessage="No items chosen">
+
+					<p:column headerText="Name of article">
+						<h:outputText value="#{items.artikel_name}" />
+					</p:column>
+
+					<p:column headerText="Amount">
+						<h:outputText value="#{items.anzahl}" />
+					</p:column>
+
+					<p:column headerText="Price">
+						<h:outputText value="#{items.artikel_preis}€" />
+					</p:column>
+
+					<p:column headerText="Status">
+						<h:outputText value="#{items.artikel_status}">
+						</h:outputText>
+					</p:column>
+
+					<p:column headerText="Order-ID">
+						<h:outputText value="#{items.bestellung_id}" />
+					</p:column>
+
+				</p:dataTable>
+			</div>
+		</div>
+		<p:linkButton outcome="customersearch.xhtml" value="Go Back"
+			style="margin-right:20px;">
+		</p:linkButton>
+	</h:form>
+</h:body>
+</html>

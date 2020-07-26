@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<h:head>
+	<title>Elasticsearch Bootfaces Example GUI</title>
+</h:head>
+
+<h:body>
+
+	<h1>Customer Search</h1>
+
+	<h:form id="master">
+		<p:panel id="quicksearch" header="Quciksearch">
+			<p:panelGrid id="grid1" columns="4" layout="grid">
+				<p:inputText id="inputQuicksearch" required="false"
+					value="#{customersearch.fieldQuickSearch}"></p:inputText>
+				<p:commandButton id="quickSearchButton" value="Quick Search"
+					update="master" action="#{customersearch.quickSearch}"></p:commandButton>
+
+			</p:panelGrid>
+		</p:panel>
+
+		<p:panel id="search" header="Search">
+			<p:panelGrid id="grid2" columns="4" layout="grid">
+				<p:outputLabel for="name" value="Name"></p:outputLabel>
+				<p:inputText id="name" required="false"
+					value="#{customersearch.name}"></p:inputText>
+
+				<p:outputLabel for="firstname" value="Firstname"></p:outputLabel>
+				<p:inputText id="firstname" required="false"
+					value="#{customersearch.firstname}"></p:inputText>
+
+				<p:outputLabel for="customerID" value="Customer ID"></p:outputLabel>
+				<p:inputText id="customerID" required="false"
+					value="#{customersearch.customerID}"></p:inputText>
+
+				<p:commandButton id="searchBtn" value="Search" update="master"
+					action="#{customersearch.search}"></p:commandButton>
+
+			</p:panelGrid>
+
+		</p:panel>
+
+		<p:dataTable id="results" var="customer"
+			value="#{customersearch.searchResults}" scrollable="true"
+			scrollHeight="400" emptyMessage="No Customer found"
+			selectionMode="single" rowKey="#{customer.id}">
+
+			<p:ajax event="rowSelect" listener="#{customersearch.selectCustomer}"
+				update="master"></p:ajax>
+
+			<p:column headerText="ID">
+				<h:outputText value="#{customer.id}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="Firstname">
+				<h:outputText value="#{customer.kunde_vorname}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="Name">
+				<h:outputText value="#{customer.kunde_name}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="Customer ID">
+				<h:outputText value="#{customer.kunde_kundennummer}"></h:outputText>
+			</p:column>
+
+			<p:column headerText="Birthday">
+				<h:outputText value="#{customer.kunde_geburtsdatum}">
+					<f:convertDateTime pattern="dd.MM.yyyy"></f:convertDateTime>
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Locked">
+				<h:outputText value="#{customer.kunde_sperrung}"></h:outputText>
+			</p:column>
+
+
+
+		</p:dataTable>
+
+	</h:form>
+
+</h:body>
+</html>
